@@ -86,7 +86,7 @@ ffmpeg -loglevel warning \
     -reconnect_at_eof 1 \
     -reconnect_streamed 1 \
     -reconnect_delay_max 5 \
-    "$RTMP_URL" &
+    "$RTMP_URL2" &
 
 FFMPEG_PID=$!
 sleep 3
@@ -136,7 +136,7 @@ while true; do
             -reconnect_at_eof 1 \
             -reconnect_streamed 1 \
             -reconnect_delay_max 5 \
-            "$RTMP_URL" &
+            "$RTMP_URL2" &
         FFMPEG_PID=$!
     fi
     

@@ -44,7 +44,7 @@ USER streamer
 # Variables de entorno con valores por defecto
 ENV DISPLAY=:99 \
     WEBSITE_URL=https://www.tradingview.com/chart/ \
-    RTMP_URL=rtmp://a.rtmp.youtube.com/live2/6w9r-0vwh-5p44-wctw-0zwb \
+    RTMP_URL2=rtmp://a.rtmp.youtube.com/live2/6w9r-0vwh-5p44-wctw-0zwb \
     SCREEN_WIDTH=1280 \
     SCREEN_HEIGHT=720 \
     FRAME_RATE=25 \

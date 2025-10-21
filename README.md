@@ -12,7 +12,7 @@ Stream TradingView a YouTube/Twitch 24/7 usando el plan gratuito de Koyeb.
    - Instance: Eco (gratis)
    - Variables de entorno:
      ```
-     RTMP_URL=rtmp://a.rtmp.youtube.com/live2/TU_STREAM_KEY
+     RTMP_URL2=rtmp://a.rtmp.youtube.com/live2/TU_STREAM_KEY
      WEBSITE_URL=https://www.tradingview.com/chart/BTCUSD/
      ```
 
