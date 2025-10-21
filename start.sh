@@ -63,8 +63,8 @@ fi
 echo "✅ Navegador iniciado (PID: $BROWSER_PID)"
 
 # Verificar configuración RTMP
-if [ "$RTMP_URL" == "rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY" ]; then
-    echo "⚠️  ADVERTENCIA: RTMP_URL usando valor por defecto"
+if [ "$RTMP_URL2" == "rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY" ]; then
+    echo "⚠️  ADVERTENCIA: RTMP_URL2 usando valor por defecto"
     echo "    Configura tu Stream Key de YouTube en las variables de entorno"
 fi
 
@@ -75,7 +75,7 @@ BUFSIZE=$((BITRATE_NUM * 2))k
 echo ""
 echo "📡 Configuración de Streaming"
 echo "=========================================="
-echo "URL Destino: $RTMP_URL"
+echo "URL Destino: $RTMP_URL2"
 echo "Resolución: ${SCREEN_WIDTH}x${SCREEN_HEIGHT}"
 echo "Frame Rate: ${FRAME_RATE} fps"
 echo "Video Bitrate: $VIDEO_BITRATE"
@@ -118,7 +118,7 @@ ffmpeg -loglevel warning \
     -reconnect_at_eof 1 \
     -reconnect_streamed 1 \
     -reconnect_delay_max 5 \
-    "$RTMP_URL" &
+    "$RTMP_URL2" &
 
 FFMPEG_PID=$!
 sleep 3
@@ -126,7 +126,7 @@ sleep 3
 # Verificar que FFMPEG inició
 if ! kill -0 $FFMPEG_PID 2>/dev/null; then
     echo "❌ Error: FFMPEG no pudo iniciar"
-    echo "Verifica tu RTMP_URL y configuración"
+    echo "Verifica tu RTMP_URL2 y configuración"
     exit 1
 fi
 
@@ -182,7 +182,7 @@ while true; do
             -reconnect_at_eof 1 \
             -reconnect_streamed 1 \
             -reconnect_delay_max 5 \
-            "$RTMP_URL" &
+            "$RTMP_URL2" &
         FFMPEG_PID=$!
         echo "✅ FFmpeg reiniciado (PID: $FFMPEG_PID)"
     fi
