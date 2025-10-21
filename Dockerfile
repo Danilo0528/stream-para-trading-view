@@ -20,8 +20,9 @@ RUN apt-get update && apt-get install -y \
 
 # Crear usuario no-root (requerido por Koyeb)
 RUN groupadd -r streamer && useradd -r -g streamer -G audio,video streamer \
-    && mkdir -p /home/streamer/Downloads /app \
-    && chown -R streamer:streamer /home/streamer /app
+    && mkdir -p /home/streamer/Downloads /app /tmp/.X11-unix \
+    && chown -R streamer:streamer /home/streamer /app \
+    && chmod 1777 /tmp/.X11-unix
 
 # Cambiar a usuario no-root
 USER streamer
@@ -44,7 +45,7 @@ USER streamer
 # Variables de entorno con valores por defecto
 ENV DISPLAY=:99 \
     WEBSITE_URL=https://www.tradingview.com/chart/ \
-    RTMP_URL2=rtmp://a.rtmp.youtube.com/live2/6w9r-0vwh-5p44-wctw-0zwb \
+    RTMP_URL=rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY \
     SCREEN_WIDTH=1280 \
     SCREEN_HEIGHT=720 \
     FRAME_RATE=25 \
@@ -52,7 +53,7 @@ ENV DISPLAY=:99 \
     AUDIO_BITRATE=96k \
     KOYEB_OPTIMIZED=true
 
-# Puerto para health check de Koyeb
+# Puerto para health check de Koyeb (aunque no lo usaremos realmente)
 EXPOSE 8080
 
 # Comando de inicio

@@ -22,7 +22,7 @@ async function startBrowser() {
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
-            '--single-process',
+            '--single-process', // Importante para contenedores con recursos limitados
             '--disable-gpu',
             '--window-size=' + screenWidth + ',' + screenHeight,
             '--disable-background-timer-throttling',
@@ -32,7 +32,7 @@ async function startBrowser() {
             '--disable-blink-features=AutomationControlled',
             '--disable-software-rasterizer',
             '--disable-extensions',
-            '--mute-audio',
+            '--mute-audio', // Importante: sin audio para ahorrar recursos
             '--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         ],
         defaultViewport: {
@@ -42,11 +42,15 @@ async function startBrowser() {
     });
 
     const page = await browser.newPage();
+
+    // Configurar página
     await page.setViewport({ width: screenWidth, height: screenHeight });
 
+    // Deshabilitar carga de recursos innecesarios (optimización)
     await page.setRequestInterception(true);
     page.on('request', (request) => {
         const resourceType = request.resourceType();
+        // Bloquear recursos pesados que no necesitamos
         if (['font', 'media'].includes(resourceType)) {
             request.abort();
         } else {
@@ -54,11 +58,13 @@ async function startBrowser() {
         }
     });
 
+    // Interceptar diálogos y alertas
     page.on('dialog', async dialog => {
         console.log('🔔 Dialog detectado:', dialog.message());
         await dialog.dismiss();
     });
 
+    // Log de errores
     page.on('error', error => {
         console.error('❌ Error en página:', error.message);
     });
@@ -67,10 +73,11 @@ async function startBrowser() {
         console.error('❌ Error JS en página:', error.message);
     });
 
+    // Navegar a la URL
     console.log('🌐 Navegando a la URL...');
     try {
         await page.goto(websiteUrl, {
-            waitUntil: 'domcontentloaded',
+            waitUntil: 'domcontentloaded', // Más rápido que networkidle2
             timeout: 60000
         });
         console.log('✅ Página cargada exitosamente');
@@ -79,15 +86,19 @@ async function startBrowser() {
         throw error;
     }
 
+    // Esperar que el contenido principal cargue
     await page.waitForTimeout(5000);
 
+    // Optimizar interfaz de TradingView
     try {
         await page.evaluate(() => {
+            // Cerrar modales y popups
             const closeButtons = document.querySelectorAll('[data-name="close"], .close, .tv-dialog__close, [aria-label="Close"]');
             closeButtons.forEach(btn => {
                 try { btn.click(); } catch (e) {}
             });
             
+            // Ocultar elementos innecesarios para ahorrar recursos
             const hideSelectors = [
                 '.tv-header',
                 '.tv-floating-toolbar',
@@ -103,6 +114,7 @@ async function startBrowser() {
                 });
             });
 
+            // Inyectar estilo para maximizar el gráfico
             const style = document.createElement('style');
             style.textContent = `
                 .tv-header { display: none !important; }
@@ -117,10 +129,12 @@ async function startBrowser() {
         console.log('⚠️ No se pudo optimizar completamente:', error.message);
     }
 
+    // Heartbeat ligero cada minuto
     console.log('♻️ Iniciando heartbeat...');
     setInterval(async () => {
         try {
             await page.evaluate(() => {
+                // Mantener sesión activa
                 if (window.localStorage) {
                     window.localStorage.setItem('lastActivity', Date.now().toString());
                 }
@@ -134,6 +148,7 @@ async function startBrowser() {
     return { browser, page };
 }
 
+// Manejo de errores y reinicio
 process.on('unhandledRejection', (error) => {
     console.error('❌ Error no manejado:', error);
     process.exit(1);
@@ -144,6 +159,7 @@ process.on('SIGTERM', () => {
     process.exit(0);
 });
 
+// Iniciar
 startBrowser().catch(error => {
     console.error('❌ Error fatal al iniciar:', error);
     process.exit(1);
