@@ -1,0 +1,28 @@
+{
+  "name": "tradingview-streamer-koyeb",
+  "version": "1.0.0",
+  "description": "Stream TradingView 24/7 to YouTube using Puppeteer and FFMPEG on Koyeb",
+  "main": "streamer.js",
+  "scripts": {
+    "start": "./start.sh"
+  },
+  "keywords": [
+    "tradingview",
+    "streaming",
+    "rtmp",
+    "youtube",
+    "puppeteer",
+    "ffmpeg",
+    "koyeb"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^21.6.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
